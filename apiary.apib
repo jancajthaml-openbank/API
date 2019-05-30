@@ -171,3 +171,166 @@ FORMAT: 1A
                 }
             ]
         }
+        
+## Search [/search/graphql]
+
+### GraphQL [POST]
+
+**Request Body**
+```
+fragment accountFields on Account {
+    name
+    isBalanceCheck
+    currency
+}
+
+fragment transferFields on Transfer {
+    transaction
+    id
+    status
+    amount
+    currency
+    valueDate
+    credit {
+        ...accountFields
+    }
+    debit {
+        ...accountFields
+    }
+}
+
+fragment transactionFields on Transaction {
+    id
+    status
+    transfers {
+        ...transferFields
+    }
+}
+
+query {
+    Transfers(tenant: "{tenant_id}") {
+        ...transferFields
+    }
+
+    Transactions(tenant: "{tenant_id}") {
+        ...transactionFields
+    }
+}
+```
+
++ Request (application/json)
+    + Headers
+
+            Accept: application/json
+
+    + Body
+
+            {
+                "query": "
+                    fragment accountFields on Account {
+                        name
+                        isBalanceCheck
+                        currency
+                    }
+                    
+                    fragment transferFields on Transfer {
+                        transaction
+                        id
+                        status
+                        amount
+                        currency
+                        valueDate
+                        credit {
+                            ...accountFields
+                        }
+                        debit {
+                            ...accountFields
+                        }
+                    }
+                    
+                    fragment transactionFields on Transaction {
+                        id
+                        status
+                        transfers {
+                            ...transferFields
+                        }
+                    }
+                    
+                    query {
+                        Transfers(tenant: \"SEARCH\") {
+                            ...transferFields
+                        }
+                    
+                        Transactions(tenant: \"SEARCH\") {
+                            ...transactionFields
+                        }
+                    }
+                ",
+                "variables": null,
+                "operationName": null
+            }
+
++ Response 200 (application/json)
+
+        {
+            "data": {
+                "Accounts": [
+                    {
+                        "name": "A",
+                        "isBalanceCheck": true,
+                        "currency": "EUR"
+                    },
+                    {
+                        "name": "B",
+                        "isBalanceCheck": false,
+                        "currency": "EUR"
+                    }
+                ],
+                "Transfers": [
+                    {
+                        "id": "transfer_1_id"
+                        "transaction": "transaction_id",
+                        "status": "committed",
+                        "valueDate": "2018-03-04T17:08:22Z",
+                        "credit": {
+                            "name": "A",
+                            "isBalanceCheck": true,
+                            "currency": "EUR"
+                        },
+                        "debit": {
+                            "name": "B",
+                            "isBalanceCheck": false,
+                            "currency": "EUR"
+                        },
+                        "amount": "1",
+                        "currency": "EUR"
+                    }
+                ],
+                "Transactions": [
+                    {   
+                        "id": "transaction_id",
+                        "status": "committed",
+                        "transfers": [
+                            {
+                                "id": "transfer_1_id"
+                                "transaction": "transaction_id",
+                                "status": "committed",
+                                "valueDate": "2018-03-04T17:08:22Z",
+                                "credit": {
+                                    "name": "A",
+                                    "isBalanceCheck": true,
+                                    "currency": "EUR"
+                                },
+                                "debit": {
+                                    "name": "B",
+                                    "isBalanceCheck": false,
+                                    "currency": "EUR"
+                                },
+                                "amount": "1",
+                                "currency": "EUR"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
