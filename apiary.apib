@@ -1,11 +1,10 @@
 FORMAT: 1A
-HOST: http://private-fe4468-oosbank.apiary-mock.com
 
 # Open Banking API
 
 ## Vault [/vault]
 
-### List Existing Tenants [GET /tenant]
+### List Existing Tenants [GET /vault/tenant]
 
 + Response 200 (application/json)
 
@@ -14,7 +13,7 @@ HOST: http://private-fe4468-oosbank.apiary-mock.com
             "B
         ]
 
-### Create New Tenant [POST /tenant/{tenant}]
+### Create New Tenant [POST /vault/tenant/{tenant}]
 
 + Parameters
     + tenant (string) - ID of tenant to be created
@@ -24,7 +23,7 @@ HOST: http://private-fe4468-oosbank.apiary-mock.com
         {
         }
 
-### Get Account [GET /account/{tenant}/{account}]
+### Get Account [GET /vault/account/{tenant}/{account}]
 
 + Parameters
     + tenant (string) - ID of existing tenant
@@ -39,7 +38,7 @@ HOST: http://private-fe4468-oosbank.apiary-mock.com
             "isBalanceCheck": false
         }
 
-### Create New Account [POST /account/{tenant}]
+### Create New Account [POST /vault/account/{tenant}]
 
 + Parameters
     + tenant (string) - ID of existing tenant
@@ -64,7 +63,7 @@ HOST: http://private-fe4468-oosbank.apiary-mock.com
 
 ## Ledger [/ledger]
 
-### List Existing Tenants [GET /tenant]
+### List Existing Tenants [GET /ledger/tenant]
 
 + Response 200 (application/json)
 
@@ -73,7 +72,7 @@ HOST: http://private-fe4468-oosbank.apiary-mock.com
             "B
         ]
 
-### Create New Tenant [POST /tenant/{tenant}]
+### Create New Tenant [POST /ledger/tenant/{tenant}]
 
 + Parameters
     + tenant (string) - ID of tenant to be created
@@ -82,7 +81,47 @@ HOST: http://private-fe4468-oosbank.apiary-mock.com
         
         {}
 
-### Create New Transaction [POST /transaction/{tenant}]
+### Get Transactions [GET /ledger/account/{tenant}}]
+
++ Parameters
+    + tenant (string) - ID of existing tenant
+
++ Response 200 (application/json)
+
+        [
+            "unique_transaction_id"
+        ]
+        
+### Get Transaction [GET /ledger/account/{tenant}/{transaction}}]
+
++ Parameters
+    + tenant (string) - ID of existing tenant
+    + transaction (string) - ID of existing transaction
+
++ Response 200 (application/json)
+
+        {
+            "id": "unique_transaction_id",
+            "status": "committed",
+            "transfers": [
+                {
+                    "id": "unique_transfer_id",
+                    "valueDate": "2018-03-04T17:08:22Z",
+                    "credit": {
+                        "tenant": "A",
+                        "name": "Credit"
+                    },
+                    "debit": {
+                        "tenant": "B",
+                        "name": "Debit"
+                    },
+                    "amount": "1",
+                    "currency": "EUR"
+                }
+            ]
+        }
+
+### Create New Transaction [POST /ledger/transaction/{tenant}]
 
 + Parameters
     + tenant (string) - ID of existing tenant
