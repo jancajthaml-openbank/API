@@ -1,80 +1,134 @@
 FORMAT: 1A
 HOST: http://private-fe4468-oosbank.apiary-mock.com
 
-# openbank
+# Open Banking API
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+## Vault [/vault]
 
-## Questions Collection [/questions]
-
-### List All Questions [GET]
+### List Existing Tenants [GET /tenant]
 
 + Response 200 (application/json)
 
         [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
+            "A",
+            "B
         ]
 
-### Create a New Question [POST]
+### Create New Tenant [POST /tenant/{tenant}]
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
++ Parameters
+    + tenant (string) - ID of tenant to be created
 
-+ Request (application/json)
-
++ Response 200 (application/json)
+        
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
         }
 
-+ Response 201 (application/json)
+### Get Account [GET /account/{tenant}/{account}]
 
++ Parameters
+    + tenant (string) - ID of existing tenant
+    + account (string) - ID of existing account
+
++ Response 200 (application/json)
+
+        {
+            "currency": "EUR",
+            "balance": "1.000000000000000000000000000000000001",
+            "blocking": "-0.000000000000000000000000000000000001",
+            "isBalanceCheck": false
+        }
+
+### Create New Account [POST /account/{tenant}]
+
++ Parameters
+    + tenant (string) - ID of existing tenant
+
++ Request (application/json)
     + Headers
 
-            Location: /questions/2
+            Accept: application/json
 
     + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
+                "name": "1234",
+                "currency": "EUR",
+                "isBalanceCheck": true
+            }
+
++ Response 200 (application/json)
+
+        {
+        }
+
+## Ledger [/ledger]
+
+### List Existing Tenants [GET /tenant]
+
++ Response 200 (application/json)
+
+        [
+            "A",
+            "B
+        ]
+
+### Create New Tenant [POST /tenant/{tenant}]
+
++ Parameters
+    + tenant (string) - ID of tenant to be created
+
++ Response 200 (application/json)
+        
+        {}
+
+### Create New Transaction [POST /transaction/{tenant}]
+
++ Parameters
+    + tenant (string) - ID of existing tenant
+
++ Request (application/json)
+    + Headers
+
+            Accept: application/json
+
+    + Body
+
+            {
+                "transfers": [
                     {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
+                        "credit": {
+                            "tenant": "A",
+                            "name": "Credit"
+                        },
+                        "debit": {
+                            "tenant": "B",
+                            "name": "Debit"
+                        },
+                        "amount": "1",
+                        "currency": "EUR"
                     }
                 ]
             }
+
++ Response 200 (application/json)
+
+        {
+            "id": "unique_transaction_id",
+            "transfers": [
+                {
+                    "id": "unique_transfer_id",
+                    "valueDate": "2018-03-04T17:08:22Z",
+                    "credit": {
+                        "tenant": "A",
+                        "name": "Credit"
+                    },
+                    "debit": {
+                        "tenant": "B",
+                        "name": "Debit"
+                    },
+                    "amount": "1",
+                    "currency": "EUR"
+                }
+            ]
+        }
