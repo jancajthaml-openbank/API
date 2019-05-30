@@ -38,6 +38,16 @@ FORMAT: 1A
             "isBalanceCheck": false
         }
 
++ Response 404 (application/json)
+
+        {
+        }
+
++ Response 504 (application/json)
+
+        {
+        }
+
 ### Create New Account [POST /vault/account/{tenant}]
 
 + Parameters
@@ -57,6 +67,16 @@ FORMAT: 1A
             }
 
 + Response 200 (application/json)
+
+        {
+        }
+
++ Response 409 (application/json)
+
+        {
+        }
+
++ Response 504 (application/json)
 
         {
         }
@@ -121,6 +141,11 @@ FORMAT: 1A
             ]
         }
 
++ Response 404 (application/json)
+
+        {
+        }
+
 ### Create New Transaction [POST /ledger/transaction/{tenant}]
 
 + Parameters
@@ -171,7 +196,65 @@ FORMAT: 1A
                 }
             ]
         }
-        
+
++ Request (application/json)
+    + Headers
+
+            Accept: application/json
+
+    + Body
+
+            {
+                "transfers": [
+                    {
+                        "credit": {
+                            "tenant": "C",
+                            "name": "Credit"
+                        },
+                        "debit": {
+                            "tenant": "D",
+                            "name": "Debit"
+                        },
+                        "amount": "1",
+                        "currency": "EUR"
+                    }
+                ]
+            }
+
++ Response 417 (application/json)
+
+        {
+        }
+
++ Request (application/json)
+    + Headers
+
+            Accept: application/json
+
+    + Body
+
+            {
+                "transfers": [
+                    {
+                        "credit": {
+                            "tenant": "C",
+                            "name": "Credit"
+                        },
+                        "debit": {
+                            "tenant": "D",
+                            "name": "Debit"
+                        },
+                        "amount": "1",
+                        "currency": "EUR"
+                    }
+                ]
+            }
+
++ Response 409 (application/json)
+
+        {
+        }
+
 ## Search [/search/graphql]
 
 ### GraphQL [POST]
